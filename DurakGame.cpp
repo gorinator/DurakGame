@@ -39,6 +39,10 @@ int main() {
         partiyamap[i] = a;
     }
     
+    for (int i = 0; i < 36; i++) { // test printing of array
+        std::cout << partiyamap[i] << "\n";
+    }
+    
     card set[6];
     set[0] = { chervi,6 };
     set[1] = { bubi, valet };
