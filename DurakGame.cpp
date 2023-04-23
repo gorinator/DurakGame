@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
+#include <time.h>
 
 struct card {
     int mast;
@@ -26,8 +27,19 @@ void setprint(card* set, int n, bool numeration);
 bool askyn();
 int askint(int intmin, int intmax);
 
-
 int main() {
+    srand(time(NULL)); // reset randomization base by current time(time.h should be included)
+    int partiyamap[36]; 
+    for (int i = 0; i < 36; i++) { // generating array with numbers from 1 to 36
+        partiyamap[i] = i + 1;
+    }
+    for (int i = 35; i >= 0; i--) { // randomizing of array by swapping random item with last one in a counter
+        int c = rand() % (i + 1);
+        int a = partiyamap[c];
+        partiyamap[c] = partiyamap[i];
+        partiyamap[i] = a;
+    }
+    
     card set[6];
     set[0] = { chervi,6 };
     set[1] = { bubi, valet };
