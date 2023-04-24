@@ -23,13 +23,15 @@ enum karty {  // V - 11, D - 12, K - 13, T - 14
 };
 
 void setprint(card* set, int n, bool numeration, int numstart);
-void setprintmulti(card* set, int n, bool numeration);
+void printusercards(card* set, int firstpos, int lastpos);
+void printcompcards(int firstpos, int lastpos);
+void printigra(card* set, int firstpos, int lastpos);
 bool askyn();
 int askint(int intmin, int intmax);
 
 int main() {
     srand(time(NULL)); // reset randomization base by current time(time.h should be included)
-    card set[36];
+    card set[201];
     int m = 3; //initial mast
     int v = 6; //initial value
     for (int i = 0; i < 36; i++) { // generating array with numbers from 0 to 35
@@ -60,7 +62,24 @@ int main() {
         else set[i].kozyr = 0;
     }
 
-    setprintmulti(&set[0], 36, true);
+    int compcardmin = 0;
+    int compcardmax = 8;
+    int usercardmin = 9;
+    int usercardmax = 20;
+    int kolodamin = 12;
+    int kolodamax = 35;
+    int bitomin = 165;
+    int bitomax = 200;
+    int igramin = 21;
+    int igramax = 25;
+    int kozyrsave = set[35].mast;
+
+
+
+    printcompcards(compcardmin, compcardmax);
+    printigra(&set[0], igramin, igramax);
+    printusercards(&set[0], usercardmin, usercardmax);
+
 
 
     int choise = askint(1, 6);
@@ -68,44 +87,51 @@ int main() {
     return 0;
 }
 
-void setprintmulti(card* set, int n, bool numeration) {
+void printusercards(card* set, int firstpos, int lastpos) {
+    int n = (lastpos - firstpos) + 1;
     if (n > 0 && n <= 6) {
-        setprint(&set[0], n, numeration, 0);
+        printf("---------------<Yours cards>-----------------\t\n");
+        setprint(&set[firstpos], n, true, 0);
     }
     
     if (n > 6 && n <= 12) {
-        setprint(&set[0], 6, numeration, 0);
-        setprint(&set[6], n - 6, numeration, 6);
+        printf("---------------<Yours cards>-----------------\t\n");
+        setprint(&set[firstpos], 6, true, 0);
+        setprint(&set[6], n - 6, true, 6);
     }
     
     if (n > 12 && n <= 18) {
-        setprint(&set[0], 6, numeration, 0);
-        setprint(&set[6], 6, numeration, 6);
-        setprint(&set[12], n - 12, numeration, 12);
+        printf("---------------<Yours cards>-----------------\t\n");
+        setprint(&set[firstpos], 6, true, 0);
+        setprint(&set[6], 6, true, 6);
+        setprint(&set[12], n - 12, true, 12);
     } 
 
     if (n > 18 && n <= 24) {
-        setprint(&set[0], 6, numeration, 0);
-        setprint(&set[6], 6, numeration, 6);
-        setprint(&set[12], 6, numeration, 12);
-        setprint(&set[18], n - 18, numeration, 18);
+        printf("---------------<Yours cards>-----------------\t\n");
+        setprint(&set[firstpos], 6, true, 0);
+        setprint(&set[6], 6, true, 6);
+        setprint(&set[12], 6, true, 12);
+        setprint(&set[18], n - 18, true, 18);
     }
 
     if (n > 24 && n <= 30) {
-        setprint(&set[0], 6, numeration, 0);
-        setprint(&set[6], 6, numeration, 6);
-        setprint(&set[12], 6, numeration, 12);
-        setprint(&set[18], 6, numeration, 18);
-        setprint(&set[24], n - 24, numeration, 24);
+        printf("---------------<Yours cards>-----------------\t\n");
+        setprint(&set[firstpos], 6, true, 0);
+        setprint(&set[6], 6, true, 6);
+        setprint(&set[12], 6, true, 12);
+        setprint(&set[18], 6, true, 18);
+        setprint(&set[24], n - 24, true, 24);
     }
 
     if (n > 30 && n <= 36) {
-        setprint(&set[0], 6, numeration, 0);
-        setprint(&set[6], 6, numeration, 6);
-        setprint(&set[12], 6, numeration, 12);
-        setprint(&set[18], 6, numeration, 18);
-        setprint(&set[24], 6, numeration, 24);
-        setprint(&set[30], n - 30, numeration, 30);
+        printf("---------------<Yours cards>-----------------\t\n");
+        setprint(&set[firstpos], 6, true, 0);
+        setprint(&set[6], 6, true, 6);
+        setprint(&set[12], 6, true, 12);
+        setprint(&set[18], 6, true, 18);
+        setprint(&set[24], 6, true, 24);
+        setprint(&set[30], n - 30, true, 30);
     }
 }
 
@@ -157,6 +183,58 @@ void setprint(card* set, int n, bool numeration, int numstart) {
     printf("\n\n");
 }
 
+void printcompcards(int firstpos, int lastpos) {
+    int n = (lastpos - firstpos) + 1;
+    if (n <= 6) {
+        for (int i = 0; i < n; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        for (int i = 0; i < n; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        for (int i = 0; i < n; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        for (int i = 0; i < n; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        for (int i = 0; i < n; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        printf("--------------<Computer cards>---------------\t");
+    }
+    if (n > 6) {
+        for (int i = 0; i < 6; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        for (int i = 0; i < 6; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        for (int i = 0; i < 5; i++) {
+            printf("/////\t");
+        }
+        printf("/ %c%i/\t", '+', n-5);
+        printf("\n");
+        for (int i = 0; i < 6; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        for (int i = 0; i < 6; i++) {
+            printf("/////\t");
+        }
+        printf("\n");
+        printf("--------------<Computer cards>---------------\t");
+    }
+    printf("\n\n");
+}
+
 int askint(int intmin, int intmax) { // protected input of only positiv int values in a range, int range sets as arguments in function
     int intanswer = -2147483648; // min_int value for initialisation
     do {
@@ -198,5 +276,47 @@ bool askyn() { // protected bool input of Yes or No, only 'y','Y','n','N' allowe
     }
     else {
         return false;
+    }
+}
+
+void printigra(card* set, int firstpos, int lastpos) {
+    int n = (lastpos - firstpos) + 1;
+    if (n > 0 && n <= 6) {
+        setprint(&set[firstpos], n, false, 0);
+    }
+
+    if (n > 6 && n <= 12) {
+        setprint(&set[firstpos], 6, false, 0);
+        setprint(&set[6], n - 6, false, 6);
+    }
+
+    if (n > 12 && n <= 18) {
+        setprint(&set[firstpos], 6, false, 0);
+        setprint(&set[6], 6, false, 6);
+        setprint(&set[12], n - 12, false, 12);
+    }
+
+    if (n > 18 && n <= 24) {
+        setprint(&set[firstpos], 6, false, 0);
+        setprint(&set[6], 6, false, 6);
+        setprint(&set[12], 6, false, 12);
+        setprint(&set[18], n - 18, false, 18);
+    }
+
+    if (n > 24 && n <= 30) {
+        setprint(&set[firstpos], 6, false, 0);
+        setprint(&set[6], 6, false, 6);
+        setprint(&set[12], 6, false, 12);
+        setprint(&set[18], 6, false, 18);
+        setprint(&set[24], n - 24, false, 24);
+    }
+
+    if (n > 30 && n <= 36) {
+        setprint(&set[firstpos], 6, false, 0);
+        setprint(&set[6], 6, false, 6);
+        setprint(&set[12], 6, false, 12);
+        setprint(&set[18], 6, false, 18);
+        setprint(&set[24], 6, false, 24);
+        setprint(&set[30], n - 30, false, 30);
     }
 }
