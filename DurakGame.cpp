@@ -3,9 +3,9 @@
 #include <time.h>
 
 struct card {
-    int mast;
-    int value;
-    bool kozyr;
+    int mast; // 3 - 6
+    int value; // 6 - 14
+    int kozyr; //10 (10 + value min will be 16)
 };
 
 enum masti {  // ♥ - 3, ♦ - 4, ♣ - 5, ♠ - 6
@@ -22,47 +22,94 @@ enum karty {  // V - 11, D - 12, K - 13, T - 14
     tuz = 14
 };
 
-void setprint(card* set, int n, bool numeration);
+void setprint(card* set, int n, bool numeration, int numstart);
+void setprintmulti(card* set, int n, bool numeration);
 bool askyn();
 int askint(int intmin, int intmax);
 
 int main() {
     srand(time(NULL)); // reset randomization base by current time(time.h should be included)
-    card partiyamap[36];
+    card set[36];
+    int m = 3; //initial mast
+    int v = 6; //initial value
     for (int i = 0; i < 36; i++) { // generating array with numbers from 0 to 35
-        partiyamap[i].value = i;
+        set[i].value = v;
+        set[i].mast = m;
+        v++;
+        if (v > 14) {
+            v = 6;
+            m++;
+        }
     }
-    for (int i = 35; i >= 0; i--) { // randomizing of array by swapping random item with last one in a counter
-        int c = rand() % (i + 1);
+    for (int i = 0; i < 36; i++) { // randomizing of array by swapping random item with i
+        int c = i - (rand() % (i+1)) ;
         card a;
-        a.value = partiyamap[c].value;
-        partiyamap[c].value = partiyamap[i].value;
-        partiyamap[i].value = a.value;
+        a.value = set[i].value;
+        a.mast = set[i].mast;
+        set[i].value = set[c].value;
+        set[i].mast = set[c].mast;
+        set[c].value = a.value;
+        set[c].mast = a.mast;
     }
 
-    for (int i = 0; i < 36; i++) { // test printing of array
-        std::cout << partiyamap[i].value << "\n";
+    int k = set[35].mast; //setting kozyr, last card mast used for that
+    for (int i = 0; i < 36; i++) {
+        if (set[i].mast == k) {
+            set[i].kozyr = 10;
+        }
+        else set[i].kozyr = 0;
     }
-    
-    card set[6];
-    set[0] = { chervi,6 };
-    set[1] = { bubi, valet };
-    set[2] = { piki,10 };
-    set[3] = { kresti,tuz };
-    set[4] = { chervi,8 };
-    set[5] = { bubi,dama };
-    setprint(&set[0], 6, true);
-    int choise = askint(1,6);
+
+    setprintmulti(&set[0], 36, true);
+
+
+    int choise = askint(1, 6);
     system("CLS");
-    setprint(&set[choise - 1], 1, false);
-    bool c = false;
-    while (c != true) {
-       c = askyn();
-    } 
     return 0;
 }
 
-void setprint(card* set, int n, bool numeration) {
+void setprintmulti(card* set, int n, bool numeration) {
+    if (n > 0 && n <= 6) {
+        setprint(&set[0], n, numeration, 0);
+    }
+    
+    if (n > 6 && n <= 12) {
+        setprint(&set[0], 6, numeration, 0);
+        setprint(&set[6], n - 6, numeration, 6);
+    }
+    
+    if (n > 12 && n <= 18) {
+        setprint(&set[0], 6, numeration, 0);
+        setprint(&set[6], 6, numeration, 6);
+        setprint(&set[12], n - 12, numeration, 12);
+    } 
+
+    if (n > 18 && n <= 24) {
+        setprint(&set[0], 6, numeration, 0);
+        setprint(&set[6], 6, numeration, 6);
+        setprint(&set[12], 6, numeration, 12);
+        setprint(&set[18], n - 18, numeration, 18);
+    }
+
+    if (n > 24 && n <= 30) {
+        setprint(&set[0], 6, numeration, 0);
+        setprint(&set[6], 6, numeration, 6);
+        setprint(&set[12], 6, numeration, 12);
+        setprint(&set[18], 6, numeration, 18);
+        setprint(&set[24], n - 24, numeration, 24);
+    }
+
+    if (n > 30 && n <= 36) {
+        setprint(&set[0], 6, numeration, 0);
+        setprint(&set[6], 6, numeration, 6);
+        setprint(&set[12], 6, numeration, 12);
+        setprint(&set[18], 6, numeration, 18);
+        setprint(&set[24], 6, numeration, 24);
+        setprint(&set[30], n - 30, numeration, 30);
+    }
+}
+
+void setprint(card* set, int n, bool numeration, int numstart) {
     for (int i = 0; i < n; i++) {
         printf("/////\t");
     }
@@ -103,8 +150,8 @@ void setprint(card* set, int n, bool numeration) {
     }
     printf("\n");
     if (numeration) {
-        for (int i = 0; i < n; i++) {
-            printf("  %i  \t", i + 1);
+        for (int i = numstart; i < (n + numstart); i++) {
+            printf("  %i  \t", i);
         }
     }
     printf("\n\n");
