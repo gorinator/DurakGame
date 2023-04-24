@@ -28,19 +28,20 @@ int askint(int intmin, int intmax);
 
 int main() {
     srand(time(NULL)); // reset randomization base by current time(time.h should be included)
-    int partiyamap[36]; 
-    for (int i = 0; i < 36; i++) { // generating array with numbers from 1 to 36
-        partiyamap[i] = i + 1;
+    card partiyamap[36];
+    for (int i = 0; i < 36; i++) { // generating array with numbers from 0 to 35
+        partiyamap[i].value = i;
     }
     for (int i = 35; i >= 0; i--) { // randomizing of array by swapping random item with last one in a counter
         int c = rand() % (i + 1);
-        int a = partiyamap[c];
-        partiyamap[c] = partiyamap[i];
-        partiyamap[i] = a;
+        card a;
+        a.value = partiyamap[c].value;
+        partiyamap[c].value = partiyamap[i].value;
+        partiyamap[i].value = a.value;
     }
-    
+
     for (int i = 0; i < 36; i++) { // test printing of array
-        std::cout << partiyamap[i] << "\n";
+        std::cout << partiyamap[i].value << "\n";
     }
     
     card set[6];
