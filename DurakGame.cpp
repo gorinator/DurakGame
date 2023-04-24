@@ -109,7 +109,7 @@ void setprint(card* set, int n, bool numeration) {
     printf("\n\n");
 }
 
-int askint(int intmin, int intmax) { // protected input of only int values in a range, int range sets as arguments in function
+int askint(int intmin, int intmax) { // protected input of only positiv int values in a range, int range sets as arguments in function
     int intanswer = -2147483648; // min_int value for initialisation
     do {
         printf("Enter number from %i to %i:", intmin, intmax);
