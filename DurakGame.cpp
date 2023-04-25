@@ -28,6 +28,7 @@ void printcompcards(int firstpos, int lastpos);
 void printigra(card* set, int firstpos, int lastpos);
 bool askyn();
 int askint(int intmin, int intmax);
+void swapcards(card* set, int a, int b);
 
 int main() {
     srand(time(NULL)); // reset randomization base by current time(time.h should be included)
@@ -63,10 +64,10 @@ int main() {
     }
 
     int compcardmin = 0;
-    int compcardmax = 8;
-    int usercardmin = 9;
-    int usercardmax = 20;
-    int kolodamin = 12;
+    int compcardmax = 5;
+    int usercardmin = 6;
+    int usercardmax = 11;
+    int kolodamin = 21;
     int kolodamax = 35;
     int bitomin = 165;
     int bitomax = 200;
@@ -79,12 +80,29 @@ int main() {
     printcompcards(compcardmin, compcardmax);
     printigra(&set[0], igramin, igramax);
     printusercards(&set[0], usercardmin, usercardmax);
-
-
-
-    int choise = askint(1, 6);
+    swapcards(&set[0], usercardmin + 1, usercardmax-1);
+    printusercards(&set[0], usercardmin, usercardmax);
+    int choise = askint(usercardmin-usercardmin+1, usercardmax-usercardmin+1);
     system("CLS");
+    setprint(&set[choise+usercardmin-1], 1, false, 0);
+    bool exit;
+    do {
+        exit = askyn();
+    } while (!exit);
     return 0;
+}
+
+void swapcards(card* set, int a, int b) {
+    card c;
+    c.value = set[a].value;
+    c.mast = set[a].mast;
+    c.kozyr = set[a].kozyr;
+    set[a].value = set[b].value;
+    set[a].mast = set[b].mast;
+    set[a].kozyr = set[b].kozyr;
+    set[b].value = c.value;
+    set[b].mast = c.mast;
+    set[b].kozyr = c.kozyr;
 }
 
 void printusercards(card* set, int firstpos, int lastpos) {
@@ -177,7 +195,7 @@ void setprint(card* set, int n, bool numeration, int numstart) {
     printf("\n");
     if (numeration) {
         for (int i = numstart; i < (n + numstart); i++) {
-            printf("  %i  \t", i);
+            printf("  %i  \t", i+1);
         }
     }
     printf("\n\n");
@@ -266,7 +284,7 @@ int askint(int intmin, int intmax) { // protected input of only positiv int valu
 bool askyn() { // protected bool input of Yes or No, only 'y','Y','n','N' allowed or words with this chars as first
     char charanswerb = 'x'; // char for initialisation
     do {
-        printf("Exit? y or n: ");
+        printf("Exit? y/n: ");
         std::string in;
         std::cin >> in;
         charanswerb = in[0]; // reading of first char in string
