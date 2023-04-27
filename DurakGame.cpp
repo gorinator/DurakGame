@@ -31,6 +31,10 @@ int askint(int intmin, int intmax);
 void swapcards(card* set, int a, int b);
 void copycard(card* set, int a, int b);
 void printgame(card* set, int compcardmin, int compcardmax, int konmin, int konmax, int usercardmin, int usercardmax);
+void zeroswap(card* set, int a, int b);
+void sortcards(card* set, int firstpos, int lastpos);
+int searchcardforgo(card* set, int firstpos, int lastpos, bool gamestart);
+int searchcardforbid(card* set, int firstpos, int lastpos, int cardtobid);
 
 int main() {
     srand((unsigned int)time(NULL)); // reset randomization base by current time(time.h should be included)
@@ -76,8 +80,10 @@ int main() {
     int bitomax = 143;
     int kolodamin = 144;
     int kolodamax = 167;
+    int posfinder = 0; // storing temp positions
 
     card erasecard = { erasecard.kozyr = 0, erasecard.mast = 0, erasecard.value = 0 }; //safety erasecard)))
+    //card mincard = { mincard.kozyr = 0, mincard.mast = 3, mincard.value = 6 }; //cards with minimum at all values
 
     for (int i = 36; i <= kolodamax; i++) { // erasing empty range with erasecard
         set[i] = erasecard;
@@ -103,12 +109,20 @@ int main() {
     for (int i = konmin; i <= konmax; i++) { // erasing kon (prev. random set area) with erasecard
         set[i] = erasecard;
     }
-    konmax = konmin;
-    
+    konmax = konmin-1;
 
+                        /* Main game process starts from here */
+
+    int firstcard = searchcardforgo(&set[0], usercardmin, compcardmax, true); // gamestart = true, finding minimal kozyr or another minimum card for game start
+    if ((firstcard >= compcardmin) && (firstcard <= compcardmax)) {
+        posfinder = searchcardforgo(&set[0], compcardmin, compcardmax, false); //gamestart = false, finding minimum card for optimal computer going
+        zeroswap(&set[0], posfinder, ++konmax);
+        zeroswap(&set[0], compcardmax, posfinder);
+        compcardmax--;
+    }
     printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
     int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
-    set[konmin] = set[usercardmin + choise]; //just for test
+    set[++konmax] = set[usercardmin + choise]; //just for test
     printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
     choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
     system("CLS");
@@ -120,24 +134,25 @@ int main() {
     return 0;
 }
 
-/*
-int searchcard(card* set, int firstpos, int lastpos, int cardtobid, bool gamestart) { //function of searching card for bid sumcard or for finding smallest one to start the game. gamestart = 1 for finding smallest card for game start in kozyrs, gamestart = 0 for finding card for bidding current card.
-    if (gamestart) {
-
-    }
-    return -1;
-}
-*/
-
 
 void printgame(card* set, int compcardmin, int compcardmax, int konmin, int konmax, int usercardmin, int usercardmax) {
     system("CLS");
     printcompcards(compcardmin, compcardmax);
     printkon(&set[0], konmin, konmax);
+    sortcards(&set[0], usercardmin, usercardmax);
     printusercards(&set[0], usercardmin, usercardmax);
 }
 
-void swapcards(card* set, int a, int b) {
+void zeroswap(card* set, int a, int b) { // from a to b with erazing a 
+    set[b].value = set[a].value;
+    set[b].mast = set[a].mast;
+    set[b].kozyr = set[a].kozyr;
+    set[a].value = 0;
+    set[a].mast = 0;
+    set[a].kozyr = 0;
+}
+
+void swapcards(card* set, int a, int b) { // from a to b
     card c;
     c.value = set[a].value;
     c.mast = set[a].mast;
@@ -387,5 +402,103 @@ void printkon(card* set, int firstpos, int lastpos) {
         setprint(&set[firstpos + 18], 6, false, 18);
         setprint(&set[firstpos + 24], 6, false, 24);
         setprint(&set[firstpos + 30], n - 30, false, 30);
+    }
+}
+
+void sortcards(card* set, int firstpos, int lastpos) {
+    int max = set[firstpos].value;
+    int maxpos = firstpos;
+    for (int i = 0; i < lastpos - firstpos; i++) {
+        for (int j = firstpos; j <= lastpos - i; j++) { //searching maximum and writing it to the end, next step not search in that end
+            if (set[j].value > max) {
+                max = set[j].value;
+                maxpos = j;
+            }
+        }
+        swapcards(&set[0], maxpos, lastpos - i);
+        max = set[firstpos].value;
+        maxpos = firstpos;
+    }
+}
+
+int searchcardforgo(card* set, int firstpos, int lastpos, bool gamestart) { //function of searching card for bid some card or for finding smallest one to start the game. gamestart = 1 for finding smallest card for game start in kozyrs, gamestart = 0 for finding smallest card for bidding current card. Bool bid for bidding ore for going with minimals not kozyr
+    int min = 15;
+    int minmast = 7;
+    int minpos = firstpos;
+
+    if (gamestart) { 
+        for (int i = firstpos; i <= lastpos; i++) {
+            if ((set[i].value < min) && (set[i].mast == set[0].mast)) { //serching minimum kozyr card position
+                min = set[i].value;
+                minpos = i;
+            }
+        }
+        if (min < 15) {
+            return minpos; // returns minimum kozyr posotoin if finded at least one kozyr in a range
+        }
+        else {
+            for (int i = firstpos; i <= lastpos; i++) {
+                if ((set[i].value <= min) && (set[i].mast < minmast)) { //serching card with minimum value and mast
+                    min = set[i].value;
+                    minpos = i;
+                    minmast = set[i].mast;
+                }
+            }
+            return minpos;
+        }
+    }
+
+    if (!(gamestart)) {
+        for (int i = firstpos; i <= lastpos; i++) {
+            if ((set[i].value < min) && (set[i].mast != set[0].mast)) { //serching minimum not kozyr card position
+                min = set[i].value;
+                minpos = i;
+            }
+        }
+        if (min < 15) {
+            return minpos; 
+        }
+        else {
+            for (int i = firstpos; i <= lastpos; i++) {
+                if ((set[i].mast == set[0].mast) && (set[i].value < min)) { //serching card with minimum value and mast
+                    min = set[i].value;
+                    minpos = i;
+                }
+            }
+            if (min < 15) {
+                return minpos; 
+            }
+            else {
+                return -1;
+            }
+        }
+    }
+    return -1;
+}
+
+int searchcardforbid(card* set, int firstpos, int lastpos, int cardtobid) { //function of searching card for bid some card
+    int min = 15;
+    int minmast = 7;
+    int minpos = firstpos;
+    for (int i = firstpos; i <= lastpos; i++) {
+        if ((set[i].value > set[cardtobid].value) && (set[i].mast == set[cardtobid].mast) && (set[i].value < min)) { //serching minimum kozyr card position
+            min = set[i].value;
+            minpos = i;
+        }
+    }
+    if (min < 15) {
+        return minpos; // returns minimum kozyr posotoin if finded at least one kozyr in a range
+    }
+    else {
+        for (int i = firstpos; i <= lastpos; i++) {
+            if ((set[cardtobid].mast != set[0].mast) && (set[i].mast == set[0].mast) && (set[i].value < min)) { //serching kozyr minimum card for bidding
+                min = set[i].value;
+                minpos = i;
+            }
+        }
+        return minpos;
+    }
+    if (min >= 15) {
+        return -1;
     }
 }
