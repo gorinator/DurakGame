@@ -1,7 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <time.h>
-#include <locale.h>
 
 struct card {
     int mast; // 3 - 6
@@ -38,7 +37,6 @@ int searchcardforgo(card* set, int firstpos, int lastpos, bool gamestart);
 int searchcardforbid(card* set, int firstpos, int lastpos, int cardtobid);
 
 int main() {
-    setlocale(LC_CTYPE, "enUS-UTF-8");
     srand((unsigned int)time(NULL)); // reset randomization base by current time(time.h should be included)
     card set[168]; // 0 - 167 = 168 !!!
     int m = 3; //initial mast
