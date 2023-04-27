@@ -275,7 +275,7 @@ void printcompcards(int firstpos, int lastpos) {
             printf("/////\t");
         }
         printf("\n");
-        printf("--------------<Computer cards>---------------\t");
+        printf("--------------<Computer cards>---------------\t\n");
     }
     if (n > 6) {
         for (int i = 0; i < 6; i++) {
@@ -299,7 +299,7 @@ void printcompcards(int firstpos, int lastpos) {
             printf("/////\t");
         }
         printf("\n");
-        printf("--------------<Computer cards>---------------\t");
+        printf("--------------<Computer cards>---------------\t\n");
     }
     printf("\n\n");
 }
