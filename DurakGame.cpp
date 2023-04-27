@@ -33,7 +33,7 @@ void copycard(card* set, int a, int b);
 void printgame(card* set, int compcardmin, int compcardmax, int konmin, int konmax, int usercardmin, int usercardmax);
 
 int main() {
-    srand(time(NULL)); // reset randomization base by current time(time.h should be included)
+    srand((unsigned int)time(NULL)); // reset randomization base by current time(time.h should be included)
     card set[168]; // 0 - 167 = 168 !!!
     int m = 3; //initial mast
     int v = 6; //initial value
