@@ -26,7 +26,7 @@ void setprint(card* set, int n, bool numeration, int numstart);
 void printusercards(card* set, int firstpos, int lastpos);
 void printcompcards(int firstpos, int lastpos);
 void printkon(card* set, int firstpos, int lastpos);
-bool askyn();
+bool askvzyat();
 int askint(int intmin, int intmax);
 void swapcards(card* set, int a, int b);
 void copycard(card* set, int a, int b);
@@ -35,6 +35,9 @@ void zeroswap(card* set, int a, int b);
 void sortcards(card* set, int firstpos, int lastpos);
 int searchcardforgo(card* set, int firstpos, int lastpos, bool gamestart);
 int searchcardforbid(card* set, int firstpos, int lastpos, int cardtobid);
+int searchcardforadd(card* set, int firstpos, int lastpos, int konmin, int konmax);
+bool checkcardanswer(card* set, int answercardpos, int konmaxprev);
+bool askbito();
 
 int main() {
     srand((unsigned int)time(NULL)); // reset randomization base by current time(time.h should be included)
@@ -108,9 +111,9 @@ int main() {
     for (int i = konmin; i <= konmax; i++) { // erasing kon (prev. random set area) with erasecard
         set[i] = erasecard;
     }
-    konmax = konmin-1;
+    konmax = konmin - 1;
 
-                        /* Main game process starts from here */
+    /* Main game process starts from here */
 
     int firstcard = searchcardforgo(&set[0], usercardmin, compcardmax, true); // gamestart = true, finding minimal kozyr or another minimum card for game start
     if ((firstcard >= compcardmin) && (firstcard <= compcardmax)) {
@@ -121,18 +124,22 @@ int main() {
     }
     printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
     int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
-    set[++konmax] = set[usercardmin + choise]; //just for test
+    if (checkcardanswer(&set[0], usercardmin + choise, konmax)) {
+        konmax++;
+        zeroswap(&set[0], usercardmin + choise, konmax);
+        zeroswap(&set[0], usercardmax, usercardmin + choise);
+        usercardmax--;
+    }
     printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
     choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
     system("CLS");
     setprint(&set[usercardmin + choise], 1, false, 0);
     bool exit;
     do {
-        exit = askyn();
+        exit = askbito();
     } while (!exit);
     return 0;
 }
-
 
 void printgame(card* set, int compcardmin, int compcardmax, int konmin, int konmax, int usercardmin, int usercardmax) {
     system("CLS");
@@ -346,10 +353,26 @@ int askint(int intmin, int intmax) { // protected input of only positiv int valu
     return intanswer;
 }
 
-bool askyn() { // protected bool input of Yes or No, only 'y','Y','n','N' allowed or words with this chars as first
+bool askvzyat() { // protected bool input of Yes or No, only 'y','Y','n','N' allowed or words with this chars as first
     char charanswerb = 'x'; // char for initialisation
     do {
-        printf("Exit? y/n: ");
+        printf("Vzyat? y/n: ");
+        std::string in;
+        std::cin >> in;
+        charanswerb = in[0]; // reading of first char in string
+    } while (charanswerb != 'y' && charanswerb != 'Y' && charanswerb != 'n' && charanswerb != 'N');
+    if (charanswerb == 'y' || charanswerb == 'Y') {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool askbito() { // protected bool input of Yes or No, only 'y','Y','n','N' allowed or words with this chars as first
+    char charanswerb = 'x'; // char for initialisation
+    do {
+        printf("Bito? y/n: ");
         std::string in;
         std::cin >> in;
         charanswerb = in[0]; // reading of first char in string
@@ -420,12 +443,12 @@ void sortcards(card* set, int firstpos, int lastpos) {
     }
 }
 
-int searchcardforgo(card* set, int firstpos, int lastpos, bool gamestart) { //function of searching card for bid some card or for finding smallest one to start the game. gamestart = 1 for finding smallest card for game start in kozyrs, gamestart = 0 for finding smallest card for bidding current card. Bool bid for bidding ore for going with minimals not kozyr
+int searchcardforgo(card* set, int firstpos, int lastpos, bool gamestart) { //function of searching card for finding smallest one to start the game. gamestart = 1 for finding smallest card for game start in kozyrs, gamestart = 0 for finding smallest card for bidding current card. Bool bid for bidding ore for going with minimals not kozyr
     int min = 15;
     int minmast = 7;
     int minpos = firstpos;
 
-    if (gamestart) { 
+    if (gamestart) {
         for (int i = firstpos; i <= lastpos; i++) {
             if ((set[i].value < min) && (set[i].mast == set[0].mast)) { //serching minimum kozyr card position
                 min = set[i].value;
@@ -437,7 +460,7 @@ int searchcardforgo(card* set, int firstpos, int lastpos, bool gamestart) { //fu
         }
         else {
             for (int i = firstpos; i <= lastpos; i++) {
-                if ((set[i].value <= min) && (set[i].mast < minmast)) { //serching card with minimum value and mast
+                if ((set[i].value <= min) && (set[i].mast < minmast) && (set[i].mast != 0)) { //serching card with minimum value and mast
                     min = set[i].value;
                     minpos = i;
                     minmast = set[i].mast;
@@ -449,23 +472,23 @@ int searchcardforgo(card* set, int firstpos, int lastpos, bool gamestart) { //fu
 
     if (!(gamestart)) {
         for (int i = firstpos; i <= lastpos; i++) {
-            if ((set[i].value < min) && (set[i].mast != set[0].mast)) { //serching minimum not kozyr card position
+            if ((set[i].value < min) && (set[i].mast != set[0].mast) && (set[i].mast != 0)) { //serching minimum not kozyr card position
                 min = set[i].value;
                 minpos = i;
             }
         }
         if (min < 15) {
-            return minpos; 
+            return minpos;
         }
         else {
             for (int i = firstpos; i <= lastpos; i++) {
-                if ((set[i].mast == set[0].mast) && (set[i].value < min)) { //serching card with minimum value and mast
+                if ((set[i].mast == set[0].mast) && (set[i].value < min)) { //serching minimumu kozyr if no usual cards
                     min = set[i].value;
                     minpos = i;
                 }
             }
             if (min < 15) {
-                return minpos; 
+                return minpos;
             }
             else {
                 return -1;
@@ -499,5 +522,53 @@ int searchcardforbid(card* set, int firstpos, int lastpos, int cardtobid) { //fu
     }
     if (min >= 15) {
         return -1;
+    }
+}
+
+int searchcardforadd(card* set, int firstpos, int lastpos, int konmin, int konmax) { //function of searching card for adding to kon
+    int min = 15;
+    int minmast = 7;
+    int minpos = firstpos;
+    for (int j = konmin; j <= konmax; j++) {
+        for (int i = firstpos; i <= lastpos; i++) {
+            if ((set[i].value == set[j].value) && (set[i].mast != set[0].mast) && (set[i].value < min) && (set[i].value != 0)) { //serching minimum kozyr card position
+                min = set[i].value;
+                minpos = i;
+            }
+        }
+    }
+    if (min < 15) {
+        return minpos; 
+    }
+    else {
+        for (int j = konmin; j <= konmax; j++) {
+            for (int i = firstpos; i <= lastpos; i++) {
+                if ((set[i].value == set[j].value) && (set[i].mast == set[0].mast) && (set[i].value < min) && (set[i].value != 0)) { //serching minimum kozyr card position to add to kon //dificulty of game can set here
+                    min = set[i].value;
+                    minpos = i;
+                }
+            }
+        }
+    }
+    if (min < 15) {
+        return minpos;
+    }
+    else { 
+        return -1;
+    }
+}
+
+bool checkcardanswer(card* set, int answercardpos, int konmaxprev) {
+    if (((set[answercardpos].mast == set[konmaxprev].mast)) && ((set[konmaxprev].mast != set[0].mast)) && (set[answercardpos].value > set[konmaxprev].value)) {
+        return true;
+    }
+    if (((set[answercardpos].mast == set[0].mast)) && ((set[konmaxprev].mast != set[0].mast))) {
+        return true;
+    }
+    if (((set[answercardpos].mast == set[konmaxprev].mast)) && ((set[konmaxprev].mast == set[0].mast)) && (set[answercardpos].value > set[konmaxprev].value)) {
+        return true;
+    }
+    else {
+        return false;
     }
 }
