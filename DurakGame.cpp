@@ -114,31 +114,63 @@ int main() {
     konmax = konmin - 1;
 
     /* Main game process starts from here */
-
+    bool comphod = false;
     int firstcard = searchcardforgo(&set[0], usercardmin, compcardmax, true); // gamestart = true, finding minimal kozyr or another minimum card for game start
-    if ((firstcard >= compcardmin) && (firstcard <= compcardmax)) {
+    if ((firstcard >= compcardmin) && (firstcard <= compcardmax)) { // if computer going first
+        comphod = true;
         posfinder = searchcardforgo(&set[0], compcardmin, compcardmax, false); //gamestart = false, finding minimum card for optimal computer going
         zeroswap(&set[0], posfinder, ++konmax);
         zeroswap(&set[0], compcardmax, posfinder);
         compcardmax--;
+        printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
+    }
+    else {
+        comphod = false;
+        system("CLS");
+        printcompcards(compcardmin, compcardmax);
+        printf("\n\n\n\n\n\n\n");
+        sortcards(&set[0], usercardmin, usercardmax);
+        printusercards(&set[0], usercardmin, usercardmax);
+    }
+
+/*
+    while (1) {
+        printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
+        int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
+        if (checkcardanswer(&set[0], usercardmin + choise, konmax)) {
+            konmax++;
+            zeroswap(&set[0], usercardmin + choise, konmax);
+            zeroswap(&set[0], usercardmax, usercardmin + choise);
+            usercardmax--;
+            break;
+        }
+        else {
+            if (askvzyat()) {
+                while (1) {
+                    int s = searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax);
+                    if (s != -1) {
+                        zeroswap(&set[0], (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)), konmax);
+                        zeroswap(&set[0], compcardmax, (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)));
+                        konmax++;
+                        compcardmax--;
+                    }
+                    else { 
+                        break; 
+                    }
+                }
+                for (int i = konmin; i <= konmax; i++) {
+                    zeroswap(&set[0], i, ++usercardmax);
+                    konmax--;
+                }
+            }
+        }
+    }
+    while ((compcardmax - compcardmin) < 6) {
+        zeroswap(&set[0], kolodamin++, ++compcardmax);
     }
     printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
-    int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
-    if (checkcardanswer(&set[0], usercardmin + choise, konmax)) {
-        konmax++;
-        zeroswap(&set[0], usercardmin + choise, konmax);
-        zeroswap(&set[0], usercardmax, usercardmin + choise);
-        usercardmax--;
-    }
-    printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
-    choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
-    system("CLS");
-    setprint(&set[usercardmin + choise], 1, false, 0);
-    bool exit;
-    do {
-        exit = askbito();
-    } while (!exit);
-    return 0;
+*/
+  return 0;
 }
 
 void printgame(card* set, int compcardmin, int compcardmax, int konmin, int konmax, int usercardmin, int usercardmax) {
@@ -310,7 +342,7 @@ void printcompcards(int firstpos, int lastpos) {
         for (int i = 0; i < 5; i++) {
             printf("/////\t");
         }
-        printf("/ %c%i/\t", '+', n - 5);
+        printf("/ %c%i/\t", '+', n - 6);
         printf("\n");
         for (int i = 0; i < 6; i++) {
             printf("/////\t");
