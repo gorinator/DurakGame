@@ -118,59 +118,90 @@ int main() {
     int firstcard = searchcardforgo(&set[0], usercardmin, compcardmax, true); // gamestart = true, finding minimal kozyr or another minimum card for game start
     if ((firstcard >= compcardmin) && (firstcard <= compcardmax)) { // if computer going first
         comphod = true;
-        posfinder = searchcardforgo(&set[0], compcardmin, compcardmax, false); //gamestart = false, finding minimum card for optimal computer going
-        zeroswap(&set[0], posfinder, ++konmax);
-        zeroswap(&set[0], compcardmax, posfinder);
-        compcardmax--;
-        printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
     }
     else {
         comphod = false;
-        system("CLS");
-        printcompcards(compcardmin, compcardmax);
-        printf("\n\n\n\n\n\n\n");
-        sortcards(&set[0], usercardmin, usercardmax);
-        printusercards(&set[0], usercardmin, usercardmax);
     }
 
-/*
-    while (1) {
-        printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
-        int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
-        if (checkcardanswer(&set[0], usercardmin + choise, konmax)) {
-            konmax++;
-            zeroswap(&set[0], usercardmin + choise, konmax);
-            zeroswap(&set[0], usercardmax, usercardmin + choise);
-            usercardmax--;
-            break;
-        }
-        else {
-            if (askvzyat()) {
-                while (1) {
-                    int s = searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax);
-                    if (s != -1) {
-                        zeroswap(&set[0], (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)), konmax);
-                        zeroswap(&set[0], compcardmax, (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)));
-                        konmax++;
-                        compcardmax--;
-                    }
-                    else { 
-                        break; 
-                    }
-                }
-                for (int i = konmin; i <= konmax; i++) {
-                    zeroswap(&set[0], i, ++usercardmax);
-                    konmax--;
-                }
+    do {
+        if (comphod == false) {
+            if ((konmax - konmin) <= 0) {
+                system("CLS");
+                printcompcards(compcardmin, compcardmax);
+                printf("\n\n\n\n\n\n\n");
+                sortcards(&set[0], usercardmin, usercardmax);
+                printusercards(&set[0], usercardmin, usercardmax);
+                int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
+            }
+            else {
+                printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
+                int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
             }
         }
+
+        if (comphod == true) {
+            while (1) {
+                if ((compcardmax - compcardmin) >= 0 ) {
+                    if ((konmax - konmin) < 0) {
+                        posfinder = searchcardforgo(&set[0], compcardmin, compcardmax, false); //gamestart = false, finding minimum card for optimal computer going
+                        zeroswap(&set[0], posfinder, ++konmax);
+                        zeroswap(&set[0], compcardmax, posfinder);
+                        compcardmax--;
+                    }
+                    printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
+                    int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
+                    if (checkcardanswer(&set[0], usercardmin + choise, konmax)) {
+                        konmax++;
+                        zeroswap(&set[0], usercardmin + choise, konmax);
+                        zeroswap(&set[0], usercardmax, usercardmin + choise);
+                        usercardmax--;
+                        while (1) {
+                            int s2 = searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax);
+                            if (s2 != -1) {
+                                zeroswap(&set[0], s2, ++konmax);
+                                zeroswap(&set[0], compcardmax--, s2);
+                                comphod = true;
+                                break;
+                            }
+                            else {
+                                comphod = false;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        if (askvzyat()) {
+                            while (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax) != -1) {
+                                    zeroswap(&set[0], (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)), ++konmax);
+                                    zeroswap(&set[0], compcardmax--, (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)));
+                            }
+                            int c = konmax;
+                            for (int i = konmin; i <= c; i++) {
+                                zeroswap(&set[0], konmax--, ++usercardmax);
+                            }
+                            while ((compcardmax - compcardmin) < 5) {
+                                zeroswap(&set[0], kolodamin++, ++compcardmax);
+                            }
+                            comphod = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            comphod = false;
+        }
+    } while (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) >= 0));
+
+    if (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) < 0)) {
+        printf("You are a Winner !!!");
     }
-    while ((compcardmax - compcardmin) < 6) {
-        zeroswap(&set[0], kolodamin++, ++compcardmax);
+    else if (((compcardmax - compcardmin) < 0) && ((usercardmax - usercardmin) < 0)) {
+        printf("Nichya !!!");
     }
-    printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
-*/
-  return 0;
+    else {
+        printf("You lose this game (((");
+    }
+    return 0;
 }
 
 void printgame(card* set, int compcardmin, int compcardmax, int konmin, int konmax, int usercardmin, int usercardmax) {
@@ -570,7 +601,7 @@ int searchcardforadd(card* set, int firstpos, int lastpos, int konmin, int konma
         }
     }
     if (min < 15) {
-        return minpos; 
+        return minpos;
     }
     else {
         for (int j = konmin; j <= konmax; j++) {
@@ -585,7 +616,7 @@ int searchcardforadd(card* set, int firstpos, int lastpos, int konmin, int konma
     if (min < 15) {
         return minpos;
     }
-    else { 
+    else {
         return -1;
     }
 }
