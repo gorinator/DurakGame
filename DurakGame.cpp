@@ -38,6 +38,7 @@ int searchcardforbid(card* set, int firstpos, int lastpos, int cardtobid);
 int searchcardforadd(card* set, int firstpos, int lastpos, int konmin, int konmax);
 bool checkcardanswer(card* set, int answercardpos, int konmaxprev);
 bool askbito();
+bool sayberu();
 
 int main() {
     srand((unsigned int)time(NULL)); // reset randomization base by current time(time.h should be included)
@@ -123,25 +124,80 @@ int main() {
         comphod = false;
     }
 
-    do {
+    while (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) >= 0)) {
+
         if (comphod == false) {
-            if ((konmax - konmin) <= 0) {
+            if ((konmax - konmin) < 0) {
                 system("CLS");
                 printcompcards(compcardmin, compcardmax);
                 printf("\n\n\n\n\n\n\n");
                 sortcards(&set[0], usercardmin, usercardmax);
                 printusercards(&set[0], usercardmin, usercardmax);
                 int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
+                zeroswap(&set[0], usercardmin + choise, ++konmax);
+                zeroswap(&set[0], usercardmax, usercardmin + choise);
+                usercardmax--;
             }
             else {
-                printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
-                int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
+                bool check = false;
+                while (!check) {
+                    printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
+                    int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
+                    for (int i = konmin; i <= konmax; i++) {
+                        if (set[usercardmin + choise].value == set[i].value) {
+                            check = true;
+                        }
+                    }
+                    if (check) {
+                        zeroswap(&set[0], usercardmin + choise, ++konmax);
+                        zeroswap(&set[0], usercardmax, usercardmin + choise);
+                        usercardmax--;
+                        break;
+                    }
+                }
+            }
+            int f = searchcardforbid(&set[0], compcardmin, compcardmax, konmax);
+            if (f != -1) {
+                zeroswap(&set[0], f, ++konmax);
+                zeroswap(&set[0], compcardmax--, f);
+            }
+            else {
+                while (sayberu()) {
+                    printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
+                    int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
+                    bool check = false;
+                    for (int i = konmin; i <= konmax; i++) {
+                        if (set[usercardmin + choise].value == set[i].value) {
+                            check = true;
+                        }
+                    }
+                    if (check) {
+                        zeroswap(&set[0], usercardmin + choise, ++konmax);
+                        zeroswap(&set[0], usercardmax, usercardmin + choise);
+                        usercardmax--;
+                    }
+                }
+                bool bito = askbito();
+                if (bito) {
+                    int d = konmax;
+                    for (int i = konmin; i <= d; i++) {
+                        zeroswap(&set[0], konmax--, bitomin++);
+                    }
+                    while ((compcardmax - compcardmin) < 5) {
+                        zeroswap(&set[0], kolodamin++, ++compcardmax);
+                    }
+                    while ((usercardmax - usercardmin) < 5) {
+                        zeroswap(&set[0], kolodamin++, ++usercardmax);
+                    }
+                    comphod = true;
+                    break;
+                }
             }
         }
 
         if (comphod == true) {
             while (1) {
-                if ((compcardmax - compcardmin) >= 0 ) {
+                if ((compcardmax - compcardmin) >= 0) {
                     if ((konmax - konmin) < 0) {
                         posfinder = searchcardforgo(&set[0], compcardmin, compcardmax, false); //gamestart = false, finding minimum card for optimal computer going
                         zeroswap(&set[0], posfinder, ++konmax);
@@ -182,8 +238,8 @@ int main() {
                     else {
                         if (askvzyat()) {
                             while (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax) != -1) {
-                                    zeroswap(&set[0], (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)), ++konmax);
-                                    zeroswap(&set[0], compcardmax--, (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)));
+                                zeroswap(&set[0], (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)), ++konmax);
+                                zeroswap(&set[0], compcardmax--, (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)));
                             }
                             int c = konmax;
                             for (int i = konmin; i <= c; i++) {
@@ -200,7 +256,7 @@ int main() {
                 break;
             }
         }
-    } while (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) >= 0));
+    }
 
     if (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) < 0)) {
         printf("You are a Winner !!!");
@@ -442,6 +498,22 @@ bool askvzyat() { // protected bool input of Yes or No, only 'y','Y','n','N' all
     }
 }
 
+bool sayberu() { // protected bool input of Yes or No, only 'y','Y','n','N' allowed or words with this chars as first
+    char charanswerb = 'x'; // char for initialisation
+    do {
+        printf("Beru, whant to add cards? y/n: ");
+        std::string in;
+        std::cin >> in;
+        charanswerb = in[0]; // reading of first char in string
+    } while (charanswerb != 'y' && charanswerb != 'Y' && charanswerb != 'n' && charanswerb != 'N');
+    if (charanswerb == 'y' || charanswerb == 'Y') {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 bool askbito() { // protected bool input of Yes or No, only 'y','Y','n','N' allowed or words with this chars as first
     char charanswerb = 'x'; // char for initialisation
     do {
@@ -591,9 +663,11 @@ int searchcardforbid(card* set, int firstpos, int lastpos, int cardtobid) { //fu
                 minpos = i;
             }
         }
-        return minpos;
     }
-    if (min >= 15) {
+    if (min < 15) {
+        return minpos; // returns minimum kozyr posotoin if finded at least one kozyr in a range
+    }
+    else {
         return -1;
     }
 }
