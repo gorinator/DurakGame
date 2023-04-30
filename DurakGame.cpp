@@ -154,6 +154,23 @@ int main() {
                         usercardmax--;
                         break;
                     }
+                    else {
+                        bool bito = askbito();
+                        if (bito) {
+                            int d = konmax;
+                            for (int i = konmin; i <= d; i++) {
+                                zeroswap(&set[0], konmax--, bitomin++);
+                            }
+                            while (((usercardmax - usercardmin) < 5) && (kolodamin <= kolodamax)) {
+                                zeroswap(&set[0], kolodamin++, ++usercardmax);
+                            }
+                            while (((compcardmax - compcardmin) < 5) && (kolodamin <= kolodamax)) {
+                                zeroswap(&set[0], kolodamin++, ++compcardmax);
+                            }
+                            comphod = true;
+                            break;
+                        }
+                    }
                 }
             }
             int f = searchcardforbid(&set[0], compcardmin, compcardmax, konmax);
@@ -162,35 +179,38 @@ int main() {
                 zeroswap(&set[0], compcardmax--, f);
             }
             else {
-                while (sayberu()) {
-                    printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
-                    int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
-                    bool check = false;
-                    for (int i = konmin; i <= konmax; i++) {
-                        if (set[usercardmin + choise].value == set[i].value) {
-                            check = true;
+                while (1) {
+                    bool say = sayberu();
+                    if (say) {
+                        printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
+                        int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
+                        bool check = false;
+                        for (int i = konmin; i <= konmax; i++) {
+                            if (set[usercardmin + choise].value == set[i].value) {
+                                check = true;
+                            }
                         }
+                        if (check) {
+                            zeroswap(&set[0], usercardmin + choise, ++konmax);
+                            zeroswap(&set[0], usercardmax, usercardmin + choise);
+                            usercardmax--;
+                        }
+                        printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
                     }
-                    if (check) {
-                        zeroswap(&set[0], usercardmin + choise, ++konmax);
-                        zeroswap(&set[0], usercardmax, usercardmin + choise);
-                        usercardmax--;
+                    else {
+                        int h = konmax;
+                        for (int i = konmin; i <= h; i++) {
+                            zeroswap(&set[0], konmax--, ++compcardmax);
+                        }
+                        while (((usercardmax - usercardmin) < 5) && (kolodamin <= kolodamax)) {
+                            zeroswap(&set[0], kolodamin++, ++usercardmax);
+                        }
+                        while (((compcardmax - compcardmin) < 5) && (kolodamin <= kolodamax)) {
+                            zeroswap(&set[0], kolodamin++, ++compcardmax);
+                        }
+                        comphod = false;
+                        break;
                     }
-                }
-                bool bito = askbito();
-                if (bito) {
-                    int d = konmax;
-                    for (int i = konmin; i <= d; i++) {
-                        zeroswap(&set[0], konmax--, bitomin++);
-                    }
-                    while ((compcardmax - compcardmin) < 5) {
-                        zeroswap(&set[0], kolodamin++, ++compcardmax);
-                    }
-                    while ((usercardmax - usercardmin) < 5) {
-                        zeroswap(&set[0], kolodamin++, ++usercardmax);
-                    }
-                    comphod = true;
-                    break;
                 }
             }
         }
@@ -224,10 +244,10 @@ int main() {
                                 for (int i = konmin; i <= e; i++) {
                                     zeroswap(&set[0], konmax--, bitomin++);
                                 }
-                                while ((compcardmax - compcardmin) < 5) {
+                                while (((compcardmax - compcardmin) < 5) && (kolodamin <= kolodamax)) {
                                     zeroswap(&set[0], kolodamin++, ++compcardmax);
                                 }
-                                while ((usercardmax - usercardmin) < 5) {
+                                while (((usercardmax - usercardmin) < 5) && (kolodamin <= kolodamax)) {
                                     zeroswap(&set[0], kolodamin++, ++usercardmax);
                                 }
                                 comphod = false;
@@ -245,7 +265,7 @@ int main() {
                             for (int i = konmin; i <= c; i++) {
                                 zeroswap(&set[0], konmax--, ++usercardmax);
                             }
-                            while ((compcardmax - compcardmin) < 5) {
+                            while (((compcardmax - compcardmin) < 5) && (kolodamax <= kolodamax)) {
                                 zeroswap(&set[0], kolodamin++, ++compcardmax);
                             }
                             comphod = true;
