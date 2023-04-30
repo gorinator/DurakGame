@@ -164,6 +164,16 @@ int main() {
                                 break;
                             }
                             else {
+                                int e = konmax;
+                                for (int i = konmin; i <= e; i++) {
+                                    zeroswap(&set[0], konmax--, bitomin++);
+                                }
+                                while ((compcardmax - compcardmin) < 5) {
+                                    zeroswap(&set[0], kolodamin++, ++compcardmax);
+                                }
+                                while ((usercardmax - usercardmin) < 5) {
+                                    zeroswap(&set[0], kolodamin++, ++usercardmax);
+                                }
                                 comphod = false;
                                 break;
                             }
@@ -187,8 +197,8 @@ int main() {
                         }
                     }
                 }
+                break;
             }
-            comphod = false;
         }
     } while (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) >= 0));
 
