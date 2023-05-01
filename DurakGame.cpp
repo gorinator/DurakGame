@@ -40,7 +40,7 @@ bool sayberu();
 
 int main() {
     srand((unsigned int)time(NULL)); // reset randomization base by current time(time.h should be included)
-    card set[169]; // 0 - 167 = 168 !!!
+    card set[168]; // 0 - 167 = 168 !!!
     int m = 3; //initial mast
     int v = 6; //initial value
     for (int i = 0; i < 36; i++) { // generating array with numbers from 0 to 35
@@ -64,7 +64,7 @@ int main() {
     }
 
     // position 0 in array used for storing kozyr, see next in a code
-    int konmin = 2;
+    int konmin = 1;
     int konmax = 35;
     int usercardmin = 36;
     int usercardmax = 71;
@@ -99,7 +99,7 @@ int main() {
         zeroswap(&set[0], i + 12, kolodamin + i);
     }
     kolodamax = 167;
-
+    kolodamin--;
     konmax = konmin - 1;
 
     /* Main game process starts from here */
@@ -113,6 +113,14 @@ int main() {
     }
 
     do {
+
+        if (((compcardmax - compcardmin) < 0) && (kolodamin == kolodamax)) {
+            break;
+        }
+        if (((usercardmax - usercardmin) < 0) && (kolodamin == kolodamax)) {
+            break;
+        }
+
         while ((comphod == false) && ((usercardmax - usercardmin) >= 0)) {
             if ((konmax - konmin) < 0) {
                 system("CLS");
@@ -148,11 +156,11 @@ int main() {
                             for (int i = konmin; i <= d; i++) {
                                 zeroswap(&set[0], konmax--, bitomin++);
                             }
-                            while (((usercardmax - usercardmin) < 5) && (kolodamin <= kolodamax)) {
-                                zeroswap(&set[0], kolodamin++, ++usercardmax);
+                            while (((usercardmax - usercardmin) < 5) && (kolodamin < kolodamax)) {
+                                zeroswap(&set[0], ++kolodamin, ++usercardmax);
                             }
-                            while (((compcardmax - compcardmin) < 5) && (kolodamin <= kolodamax)) {
-                                zeroswap(&set[0], kolodamin++, ++compcardmax);
+                            while (((compcardmax - compcardmin) < 5) && (kolodamin < kolodamax)) {
+                                zeroswap(&set[0], ++kolodamin, ++compcardmax);
                             }
                             comphod = true;
                             break;
@@ -190,11 +198,11 @@ int main() {
                             for (int i = konmin; i <= h; i++) {
                                 zeroswap(&set[0], konmax--, ++compcardmax);
                             }
-                            while (((usercardmax - usercardmin) < 5) && (kolodamin <= kolodamax)) {
-                                zeroswap(&set[0], kolodamin++, ++usercardmax);
+                            while (((usercardmax - usercardmin) < 5) && (kolodamin < kolodamax)) {
+                                zeroswap(&set[0], ++kolodamin, ++usercardmax);
                             }
-                            while (((compcardmax - compcardmin) < 5) && (kolodamin <= kolodamax)) {
-                                zeroswap(&set[0], kolodamin++, ++compcardmax);
+                            while (((compcardmax - compcardmin) < 5) && (kolodamin < kolodamax)) {
+                                zeroswap(&set[0], ++kolodamin, ++compcardmax);
                             }
                             comphod = false;
                             break;
@@ -203,16 +211,11 @@ int main() {
                 }
             }
         }
-        if (((compcardmax - compcardmin) < 0) && (kolodamin == kolodamax)) {
-            break;
-        }
-        if (((usercardmax - usercardmin) < 0) && (kolodamin == kolodamax)) {
-            break;
-        }
+
         while ((comphod == true) && (compcardmax - compcardmin) >= 0) {
-            if ((konmax - konmin) < 0) {
+            if ((konmax - konmin) <= 0) {
                 posfinder = searchcardforgo(&set[0], compcardmin, compcardmax, false); //gamestart = false, finding minimum card for optimal computer going
-                if (posfinder >= 0) {
+                if (posfinder != -1) {
                     zeroswap(&set[0], posfinder, ++konmax);
                     zeroswap(&set[0], compcardmax, posfinder);
                     compcardmax--;
@@ -228,42 +231,39 @@ int main() {
                 zeroswap(&set[0], usercardmin + choise, konmax);
                 zeroswap(&set[0], usercardmax, usercardmin + choise);
                 usercardmax--;
-                while (1) {
-                    int s2 = searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax);
-                    if (s2 != -1) {
-                        zeroswap(&set[0], s2, ++konmax);
-                        zeroswap(&set[0], compcardmax--, s2);
-                        comphod = true;
-                        break;
-                    }
-                    else {
-                        int e = konmax;
-                        for (int i = konmin; i <= e; i++) {
-                            zeroswap(&set[0], konmax--, bitomin++);
-                        }
-                        while (((compcardmax - compcardmin) < 5) && (kolodamin <= kolodamax)) {
-                            zeroswap(&set[0], kolodamin++, ++compcardmax);
-                        }
-                        while (((usercardmax - usercardmin) < 5) && (kolodamin <= kolodamax)) {
-                            zeroswap(&set[0], kolodamin++, ++usercardmax);
-                        }
-                        comphod = false;
-                        break;
-                    }
+                int s2 = searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax);
+                while (s2 != -1) {
+                    zeroswap(&set[0], s2, ++konmax);
+                    zeroswap(&set[0], compcardmax--, s2);
+                    comphod = true;
+                    break;
                 }
+                int e = konmax;
+                for (int i = konmin; i <= e; i++) {
+                    zeroswap(&set[0], konmax--, bitomin++);
+                }
+                while (((compcardmax - compcardmin) < 5) && (kolodamin < kolodamax)) {
+                    zeroswap(&set[0], ++kolodamin, ++compcardmax);
+                }
+                while (((usercardmax - usercardmin) < 5) && (kolodamin < kolodamax)) {
+                    zeroswap(&set[0], ++kolodamin, ++usercardmax);
+                }
+                comphod = false;
+                break;
             }
             else {
                 if (askvzyat()) {
-                    while (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax) != -1) {
-                        zeroswap(&set[0], (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)), ++konmax);
-                        zeroswap(&set[0], compcardmax--, (searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)));
+                    while ((searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax)) != -1) {
+                        int e = searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax);
+                        zeroswap(&set[0], e, ++konmax);
+                        zeroswap(&set[0], compcardmax--, e);
                     }
                     int c = konmax;
                     for (int i = konmin; i <= c; i++) {
                         zeroswap(&set[0], konmax--, ++usercardmax);
                     }
-                    while (((compcardmax - compcardmin) < 5) && (kolodamax <= kolodamax)) {
-                        zeroswap(&set[0], kolodamin++, ++compcardmax);
+                    while (((compcardmax - compcardmin) < 5) && (kolodamin < kolodamax)) {
+                        zeroswap(&set[0], ++kolodamin, ++compcardmax);
                     }
                     comphod = true;
                     break;
