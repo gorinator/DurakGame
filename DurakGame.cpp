@@ -274,16 +274,19 @@ int main() {
 
     } while (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) >= 0));
 
+    system("CLS");
+
     if (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) < 0)) {
-        printf("You are a Winner !!!");
+        printf(" You are a Winner !!! \n");
     }
     else if (((compcardmax - compcardmin) < 0) && ((usercardmax - usercardmin) < 0)) {
-        printf("Nichya !!!");
+        printf(" Nichya !!! \n");
     }
     else {
-        printf("You lose this game (((");
+        printf(" You lose this game ((( \n");
     }
 
+    system("PAUSE");
     return 0;
 }
 
