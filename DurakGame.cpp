@@ -215,7 +215,7 @@ int main() {
         }
 
         while ((comphod == true) && (compcardmax - compcardmin) >= 0) { // if computer is going and user is bidding
-            if ((konmax - konmin) <= 0) { // finding minimum valued card if previos was bito or firs hod computer going
+            if ((konmax - konmin) < 0) { // finding minimum valued card if previos was bito or firs hod computer going
                 posfinder = searchcardforgo(&set[0], compcardmin, compcardmax, false); //gamestart = false, finding minimum card for optimal computer going
                 if (posfinder != -1) { // check if we can find some card 
                     zeroswap(&set[0], posfinder, ++konmax);
