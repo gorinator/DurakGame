@@ -1,5 +1,7 @@
 # DurakGame
-Durak game or Fool game - CLI edition. Written from scratch on C++ just for fun! I'll be very happy if it will be useful for someone.
+Durak game or Fool game - CLI edition. Written from scratch on C++ just for fun! 
+
+I'll be very happy if it will be useful for someone.
 
 
 Little how to:
