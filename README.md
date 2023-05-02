@@ -22,7 +22,7 @@ You can answer with Yes or No.
 Same analogue if you chose the wrong card for adding, the corresponding question will be shown.
 
 
-So if you don't want to add more cards, just enter the number of cards that are not in the playing set. 
+So if you don't want to add more cards, just enter the number of card that are not in the playing set. 
 
 ![DurakGame_2](https://user-images.githubusercontent.com/128217174/235555564-12e47bd9-c948-41f6-a22c-bf0d16e4d89f.jpg)
 
