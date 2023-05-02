@@ -13,17 +13,17 @@ Navigation and selection is done by entering the number from the keyboard.
 
 There is protection if you have chosen the wrong card for bidding. 
 If so, question arises about taking this card.
-You can answer with yes or no.
+You can answer with Yes or No.
 
 ![DurakGame_2](https://user-images.githubusercontent.com/128217174/235555564-12e47bd9-c948-41f6-a22c-bf0d16e4d89f.jpg)
 
-Same analogue if you chosen wrong card for adding.
+Same analogue if you chosen wrong card for adding, the corresponding question will be shown.
 
 ![DurakGame_3](https://user-images.githubusercontent.com/128217174/235555565-8c1e34c1-7154-4719-9f0b-8109be8af7b4.jpg)
 
-Also if computer have no cards for bid he will ask if you would like to add card to him.
-You say yes or no.
-If you say yes, then you can add cards one by one.
-After that gave answer no for same questions if you have no more cards for add.
+Also if computer have no cards for bid, it will ask, would you like to add cards?
+You say Yes or No.
+If you say Yes, then you can add cards one by one.
+After that choose answer No, if you have no more cards for adding.
 
 Enjoy)))
