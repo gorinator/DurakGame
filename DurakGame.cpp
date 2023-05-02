@@ -234,7 +234,7 @@ int main() {
                 zeroswap(&set[0], usercardmax, usercardmin + choise); // swap last card of user to finded one
                 usercardmax--; // make user set shotter by -1 card that we put to kon
                 int s2 = searchcardforadd(&set[0], compcardmin, compcardmax, konmin, konmax); // searching if computer have some cards to add to new kon
-                while (s2 != -1) { //if computer have card to add do it
+                if (s2 != -1) { //if computer have card to add do it
                     zeroswap(&set[0], s2, ++konmax);
                     zeroswap(&set[0], compcardmax--, s2);
                     comphod = true;
