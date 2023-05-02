@@ -3,12 +3,10 @@ Durak game or Fool game - CLI edition.
 Written from scratch just for fun!
 I'll be very happy if it will be useful for someone.
 
-![ScreenShot_2023-05-02_02-56-30-05s](https://user-images.githubusercontent.com/128217174/235554992-ea71e761-affa-4280-9a88-63b5b19ac81a.jpg)
+![DurakGame_1](https://user-images.githubusercontent.com/128217174/235555561-512cfc83-3b69-41c6-b12b-4a5a5e93071d.jpg)
 
-![ScreenShot_2023-05-02_02-56-49-05s](https://user-images.githubusercontent.com/128217174/235554994-d85f7512-d082-4393-8db7-da437950c9ed.jpg)
+![DurakGame_2](https://user-images.githubusercontent.com/128217174/235555564-12e47bd9-c948-41f6-a22c-bf0d16e4d89f.jpg)
 
-![ScreenShot_2023-05-02_02-57-36-05s](https://user-images.githubusercontent.com/128217174/235554996-dfbd7ce8-7f3d-4a04-a55e-c8ee8e70f3e8.jpg)
-
-![ScreenShot_2023-05-02_02-58-41-05s](https://user-images.githubusercontent.com/128217174/235554997-74f47eb5-01bf-4b40-bf70-ec37aa485562.jpg)
+![DurakGame_3](https://user-images.githubusercontent.com/128217174/235555565-8c1e34c1-7154-4719-9f0b-8109be8af7b4.jpg)
 
 Enjoy)))
