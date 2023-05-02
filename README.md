@@ -6,7 +6,7 @@ I'll be very happy if it will be useful for someone.
 
 Little how to:
 
-Game starts automatically and the first player to go is those that have minimal kozyr in his set.
+Game starts automatically and the first player to go is those that have minimal kozyr in his random generated set.
 
 Navigation and selection is done by entering the number from the keyboard.
 
