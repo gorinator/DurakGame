@@ -115,14 +115,6 @@ int main() {
     }
 
     do {
-
-        if (((compcardmax - compcardmin) < 0) && (kolodamin == kolodamax)) { //checking if we should stop game if result of game can be find just now
-            break;
-        }
-        if (((usercardmax - usercardmin) < 0) && (kolodamin == kolodamax)) { //checking if we should stop game if result of game can be find just now
-            break;
-        }
-
         while ((comphod == false) && ((usercardmax - usercardmin) >= 0)) { //computer is bidding, user going
             if ((konmax - konmin) < 0) { // ned for correct printing full game set if no cards in kon
                 system("CLS");
@@ -175,6 +167,10 @@ int main() {
                 if (f != -1) { // placing if finding, if no such card we will recive -1 from function
                     zeroswap(&set[0], f, ++konmax);
                     zeroswap(&set[0], compcardmax--, f);
+                }
+                else if ((f == -1) && ((compcardmax - compcardmin) < 0)) {
+                    comphod = true;
+                    break;
                 }
                 else { // if computer have no card for bid and function send us -1 say beru tu user
                     while (1) {
@@ -274,7 +270,7 @@ int main() {
             break;
         }
 
-    } while (((compcardmax - compcardmin) >= 0) && ((usercardmax - usercardmin) >= 0)); // searching if winner can be founded on that point
+    } while ((((compcardmax - compcardmin) >= 0) || (kolodamin != kolodamax)) && (((usercardmax - usercardmin) >= 0) || (kolodamin != kolodamax))); // searching if winner can be founded on that point
 
     system("CLS"); // clear screen before printing winner
 
