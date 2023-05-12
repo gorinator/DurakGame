@@ -270,7 +270,7 @@ int main() {
             break;
         }
 
-    } while ((((compcardmax - compcardmin) >= 0) || (kolodamin != kolodamax)) && (((usercardmax - usercardmin) >= 0) || (kolodamin != kolodamax))); // searching if winner can be founded on that point
+    } while ((((compcardmax - compcardmin) >= 0) || (kolodamin != kolodamax)) && (((usercardmax - usercardmin) >= 0) || (kolodamin != kolodamax))); // searching if winner can be founded on that point 
 
     system("CLS"); // clear screen before printing winner
 
