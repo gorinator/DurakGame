@@ -168,7 +168,7 @@ int main() {
                     zeroswap(&set[0], f, ++konmax);
                     zeroswap(&set[0], compcardmax--, f);
                 }
-                else if ((f == -1) && ((compcardmax - compcardmin) < 0)) {
+                else if ((f == -1) && ((compcardmax - compcardmin) < 0)) { //check if computer have no cards and user add to kon more. Fix of Bug1 and Bug2.
                     comphod = true;
                     break;
                 }
