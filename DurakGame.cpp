@@ -175,7 +175,7 @@ int main() {
                 else { // if computer have no card for bid and function send us -1 say beru tu user
                     while (1) {
                         bool say = sayberu();
-                        if (say) { // adding cards if we answered yes add cards more
+                        if (say && ((usercardmax - usercardmin) >= 0)) { // adding cards if we answered yes add cards more
                             printgame(&set[0], compcardmin, compcardmax, konmin, konmax, usercardmin, usercardmax);
                             int choise = (askint(usercardmin - usercardmin + 1, usercardmax - usercardmin + 1)) - 1;
                             bool check = false;
