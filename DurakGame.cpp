@@ -22,7 +22,7 @@ enum karty {  // V - 11, D - 12, K - 13, T - 14
 };
 
 void setprint(card* set, int n, bool numeration, int numstart); //basic function of printing N cards symbol by symbol, line by line
-void printcompcards(int firstpos, int lastpos); // function for printing computer cards without showing info, only count, maximum 6 cards printed, if more in set char + and additional number of cards appeares
+void printcompcards(int firstpos, int lastpos); // function for printing computer cards without showing info, only count, maximum 6 cards printed, if more in set char + and additional number of cards appeares 
 void printkon(card* set, int firstpos, int lastpos); //function of printing current playing set without numeration, printing by 6 cards in line
 void printusercards(card* set, int firstpos, int lastpos); // function for printing user cards by 6 in line, with numeration
 void printgame(card* set, int compcardmin, int compcardmax, int konmin, int konmax, int usercardmin, int usercardmax); // function for printing full current game field, combo function consist of other functions
